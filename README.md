@@ -1,10 +1,13 @@
 # CherryClip · 樱桃剪贴板
 
+<p align="center"><img src="docs/icon-512.png" width="120" alt="CherryClip"></p>
+
 参照 [CherryHQ/cherry-studio-app](https://github.com/CherryHQ/cherry-studio-app) 的现代移动端设计体系（Geist 色彩令牌、双主题、胶囊控件、BottomSheet）实现的 Android 剪贴板工具，功能全面、上手极简。
 
 - 包名：`com.cherryclip.app`
 - 技术栈：Kotlin · Jetpack Compose · Material3 · SQLite（原生 SQLiteOpenHelper）· Gson · ZXing
 - 最低版本：Android 8.0（API 26），编译 SDK 36
+- 应用图标：白色底 + 紫蓝剪贴板堆叠图形，自适应图标（前台为 `res/mipmap-*dpi/ic_launcher_foreground.png`，按 108dp 画布生成，图形主体控制在 66dp 安全圆内）
 
 ---
 
