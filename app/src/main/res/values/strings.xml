@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CherryClip</string>
+    <string name="tile_label">CherryClip 剪贴板</string>
+    <string name="process_text_save">存入 CherryClip</string>
+    <string name="share_save_label">保存到 CherryClip</string>
+    <string name="monitor_channel_name">剪贴板监听服务</string>
+    <string name="monitor_channel_desc">保持剪贴板实时记录与快捷入口</string>
+</resources>

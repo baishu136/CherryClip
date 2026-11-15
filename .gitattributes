@@ -1,0 +1,14 @@
+# 统一换行符，避免 Windows / Linux 协作时整文件改动
+* text=auto eol=lf
+
+# Windows 批处理必须是 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 二进制文件不做换行符与 diff 处理
+*.apk binary
+*.jar binary
+*.zip binary
+*.png binary
+*.jpg binary
+*.webp binary

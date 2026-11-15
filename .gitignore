@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+app/build/
+.kotlin/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# 本地配置
+local.properties
+
+# IDE
+.idea/
+*.iml
+*.hprof
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 源码快照压缩包（与工作区内容重复）
+CherryClip-src-*.zip
