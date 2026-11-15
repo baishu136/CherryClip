@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.BookmarkBorder
@@ -53,6 +54,7 @@ import com.cherryclip.app.ui.theme.CherryTheme
 @Composable
 fun SnippetsScreen(
     snippets: List<ClipSnippet>,
+    onBack: () -> Unit,
     onCopySnippet: (ClipSnippet) -> Unit,
     onToggleFavorite: (String) -> Unit,
     onNewSnippet: () -> Unit,
@@ -94,6 +96,15 @@ fun SnippetsScreen(
                 .padding(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            IconButton(onClick = onBack, modifier = Modifier.size(28.dp)) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                    contentDescription = "返回",
+                    tint = palette.foreground,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            Spacer(Modifier.width(4.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text("常用片段", style = MaterialTheme.typography.titleMedium, color = palette.foreground)
                 Text("支持 {{date}} · {{time}} · {{clipboard}} 动态变量", style = MaterialTheme.typography.bodySmall, color = palette.foregroundTertiary)
@@ -163,7 +174,7 @@ fun SnippetsScreen(
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 104.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(filtered, key = { it.id }) { snippet ->

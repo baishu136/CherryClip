@@ -7,7 +7,10 @@
 - 包名：`com.cherryclip.app`
 - 技术栈：Kotlin · Jetpack Compose · Material3 · SQLite（原生 SQLiteOpenHelper）· Gson · ZXing
 - 最低版本：Android 8.0（API 26），编译 SDK 36
-- 应用图标：白色底 + 紫蓝剪贴板堆叠图形，自适应图标（前台为 `res/mipmap-*dpi/ic_launcher_foreground.png`，按 108dp 画布生成，图形主体控制在 66dp 安全圆内）
+- 当前版本：1.1.0（更换图标 + 界面结构改版）
+- 应用图标：白色底 + 紫蓝剪贴板堆叠图形，自适应图标（前台为 `res/mipmap-*dpi/ic_launcher_foreground.png`，按 108dp 画布生成，图形主体对角线控制在 72dp 圆形遮罩内）
+
+**界面结构**：单页式主页，无底部导航栏。右上角齿轮进入设置页，设置页内含「常用片段」入口；类型筛选收进屏幕右侧的悬浮按钮，点击后以选项卡形式从右滑出（面板内同時提供「新建记录」）。页面间用返回箭头与系统返回键回到主页。
 
 ---
 
@@ -61,7 +64,7 @@ gradlew.bat installDebug           # 连接设备后直接安装
 - **敏感内容**：命中 API Key、`password:` 模式、银行卡号时打锁标，并可设置自动跳过
 
 ### 3. 整理与批量操作
-- 点击即复制、长按进入多选；置顶、自定义 `#标签`、全文 / 标签 / 类型筛选与搜索
+- 点击即复制、长按进入多选；置顶、自定义 `#标签`、全文 / 标签 / 类型筛选与搜索（类型筛选收在右侧悬浮栏内，展开后可选全部 / 置顶 / 链接 / 代码 / 验证码 / 颜色 / 图片）
 - 多选合并复制：换行 / 空行 / 空格 / 逗号 / 无分隔，可选「仅复制」或「另存为新条」
 - 单条详情页：编辑标题、内容、标签；分享；存为常用片段；删除；生成二维码
 
@@ -97,7 +100,7 @@ gradlew.bat installDebug           # 连接设备后直接安装
         │   ├── AndroidManifest.xml
         │   ├── java/com/cherryclip/app/
         │   │   ├── CherryClipApp.kt               Application + 通知渠道
-        │   │   ├── MainActivity.kt                主界面、导航、全部 Sheets 编排
+        │   │   ├── MainActivity.kt                主界面、页面路由、全部 Sheets 编排
         │   │   ├── QuickPasteActivity.kt          磁贴/通知呼出的半屏快捷浮窗
         │   │   ├── ShareCaptureActivity.kt        分享 / 选词 静默入库
         │   │   ├── clipboard/
@@ -115,7 +118,7 @@ gradlew.bat installDebug           # 连接设备后直接安装
         │   │   └── ui/
         │   │       ├── theme/CherryTokens.kt      设计令牌（浅色 / 深色配色、尺寸）
         │   │       ├── theme/Theme.kt             主题装配 + 系统栏样式
-        │   │       ├── components/                品牌标、搜索胶囊、筛选 Chip、Toast、剪贴卡、各类 Sheet
+        │   │       ├── components/                品牌标、搜索胶囊、右侧悬浮筛选栏、Toast、剪贴卡、各类 Sheet
         │   │       └── screens/                   主页 / 常用片段 / 设置 / PIN 锁屏
         │   └── res/                               图标（自适应）、主题、字符串、FileProvider
         └── test/java/com/cherryclip/app/          单元测试（识别 / 变换 / 二维码）

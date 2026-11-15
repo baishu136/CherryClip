@@ -5,33 +5,20 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Bookmark
-import androidx.compose.material.icons.rounded.ContentPaste
-import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,12 +30,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.cherryclip.app.clipboard.ClipboardHelper
@@ -70,7 +54,6 @@ import com.cherryclip.app.ui.screens.HomeScreen
 import com.cherryclip.app.ui.screens.SettingsScreen
 import com.cherryclip.app.ui.screens.SnippetsScreen
 import com.cherryclip.app.ui.theme.CherryClipTheme
-import com.cherryclip.app.ui.theme.CherryDimens
 import com.cherryclip.app.ui.theme.CherryTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -243,6 +226,11 @@ private fun CherryClipRoot(
                 .background(palette.background)
                 .windowInsetsPadding(WindowInsets.safeDrawing)
         ) {
+            // 底部导航栏已移除：系统返回键从设置 / 片段页回到主页
+            BackHandler(enabled = currentTab != MainTab.HISTORY) {
+                currentTab = MainTab.HISTORY
+            }
+
             when (currentTab) {
                 MainTab.HISTORY -> HomeScreen(
                     clips = clips,
@@ -307,11 +295,13 @@ private fun CherryClipRoot(
                             showToast("已添加标签 #$tag")
                         }
                     },
-                    onOpenMergeSheet = { selected -> mergeTargets = selected }
+                    onOpenMergeSheet = { selected -> mergeTargets = selected },
+                    onOpenSettings = { currentTab = MainTab.SETTINGS }
                 )
 
                 MainTab.SNIPPETS -> SnippetsScreen(
                     snippets = snippets,
+                    onBack = { currentTab = MainTab.HISTORY },
                     onCopySnippet = { snippet ->
                         triggerHaptic()
                         val sysClip = (ClipboardHelper.readCurrentClipboard(context) as? ClipboardHelper.ClipboardReadResult.Text)?.value.orEmpty()
@@ -343,6 +333,8 @@ private fun CherryClipRoot(
                     settings = settings,
                     clipCount = clips.size,
                     snippetCount = snippets.size,
+                    onBack = { currentTab = MainTab.HISTORY },
+                    onOpenSnippets = { currentTab = MainTab.SNIPPETS },
                     onUpdateSettings = { transform -> repository.updateSettings(transform) },
                     onToggleForegroundService = { enable ->
                         if (enable) {
@@ -382,23 +374,13 @@ private fun CherryClipRoot(
                 )
             }
 
-            // Floating Cherry Pill Bottom Navigation
-            CherryFloatingNavBar(
-                currentTab = currentTab,
-                onSelectTab = { currentTab = it },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .navigationBarsPadding()
-                    .padding(horizontal = 24.dp, vertical = 14.dp)
-            )
-
             // Crisp floating toast
             CherryToastCapsule(
                 message = toastMessage,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .navigationBarsPadding()
-                    .padding(bottom = 82.dp)
+                    .padding(bottom = 24.dp)
             )
         }
 
@@ -498,79 +480,5 @@ private fun CherryClipRoot(
                 }
             )
         }
-    }
-}
-
-@Composable
-private fun CherryFloatingNavBar(
-    currentTab: MainTab,
-    onSelectTab: (MainTab) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val palette = CherryTheme.palette
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(CherryDimens.RadiusFull))
-            .background(palette.card.copy(alpha = 0.96f))
-            .border(1.dp, palette.borderStrong.copy(alpha = 0.55f), RoundedCornerShape(CherryDimens.RadiusFull))
-            .padding(horizontal = 8.dp, vertical = 6.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        NavItem(
-            icon = Icons.Rounded.ContentPaste,
-            label = MainTab.HISTORY.label,
-            selected = currentTab == MainTab.HISTORY,
-            onClick = { onSelectTab(MainTab.HISTORY) },
-            modifier = Modifier.weight(1f)
-        )
-        NavItem(
-            icon = Icons.Rounded.Bookmark,
-            label = MainTab.SNIPPETS.label,
-            selected = currentTab == MainTab.SNIPPETS,
-            onClick = { onSelectTab(MainTab.SNIPPETS) },
-            modifier = Modifier.weight(1f)
-        )
-        NavItem(
-            icon = Icons.Rounded.Settings,
-            label = MainTab.SETTINGS.label,
-            selected = currentTab == MainTab.SETTINGS,
-            onClick = { onSelectTab(MainTab.SETTINGS) },
-            modifier = Modifier.weight(1f)
-        )
-    }
-}
-
-@Composable
-private fun NavItem(
-    icon: ImageVector,
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val palette = CherryTheme.palette
-    val fg = if (selected) palette.primary else palette.mutedForeground
-    val bg = if (selected) palette.primarySoft else androidx.compose.ui.graphics.Color.Transparent
-
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(CherryDimens.RadiusFull))
-            .background(bg)
-            .clickable(onClick = onClick)
-            .padding(vertical = 9.dp, horizontal = 8.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(icon, contentDescription = label, tint = fg, modifier = Modifier.size(18.dp))
-        Spacer(Modifier.width(5.dp))
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelMedium,
-            color = fg,
-            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
-            maxLines = 1
-        )
     }
 }

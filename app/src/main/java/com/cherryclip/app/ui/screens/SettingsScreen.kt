@@ -19,7 +19,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.AutoDelete
+import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.Download
@@ -32,6 +34,7 @@ import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.icons.rounded.Vibration
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
@@ -70,7 +73,9 @@ fun SettingsScreen(
     onLockNow: () -> Unit,
     onClearUnpinned: () -> Unit,
     onExportBackup: () -> Unit,
-    onImportBackup: () -> Unit
+    onImportBackup: () -> Unit,
+    onBack: () -> Unit,
+    onOpenSnippets: () -> Unit
 ) {
     val palette = CherryTheme.palette
     var showPinDialog by remember { mutableStateOf(false) }
@@ -81,10 +86,34 @@ fun SettingsScreen(
             .fillMaxSize()
             .background(palette.background)
             .verticalScroll(rememberScrollState())
-            .padding(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 104.dp),
+            .padding(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        Text("设置", style = MaterialTheme.typography.titleMedium, color = palette.foreground)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = onBack, modifier = Modifier.size(28.dp)) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                    contentDescription = "返回",
+                    tint = palette.foreground,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            Spacer(Modifier.width(4.dp))
+            Text("设置", style = MaterialTheme.typography.titleMedium, color = palette.foreground)
+        }
+
+        // Content entry (bottom nav removed)
+        SectionLabel("内容")
+        CherrySectionCard {
+            Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)) {
+                SettingsActionRow(
+                    icon = Icons.Rounded.Bookmark,
+                    title = "常用片段",
+                    subtitle = "$snippetCount 条 · 模板变量与一键复制",
+                    onClick = onOpenSnippets
+                )
+            }
+        }
 
         // Theme section
         SectionLabel("外观主题")
