@@ -161,3 +161,13 @@ A：需要授予通知权限（Android 13+ 会弹窗申请）；磁贴需在控�
 
 **Q：备份能跨机恢复吗？**
 A：文本、片段与图片元数据可以；图片原文件不入 JSON，跨机恢复后仅保留记录与尺寸信息。
+
+---
+
+## ☕ 赞助与支持
+
+如果 CherryClip 对您有帮助，欢迎赞助支持作者！您的支持是持续维护与迭代的最大动力。
+
+| 微信支付 (WeChat Pay) | 支付宝 (Alipay) |
+| :---: | :---: |
+| <img src="docs/images/sponsor_wechat.jpg" width="240" alt="微信支付" /> | <img src="docs/images/sponsor_alipay.jpg" width="240" alt="支付宝" /> |
